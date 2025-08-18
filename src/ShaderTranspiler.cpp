@@ -317,11 +317,11 @@ const CompileGLSLResult CompileGLSL(const std::string_view& source, const std::s
             break;
         case 11: // Vulkan 1.1
 			vulkanClientVersion = glslang::EShTargetVulkan_1_1;
-            targetSpvVersion    = glslang::EShTargetSpv_1_4;
+            targetSpvVersion    = glslang::EShTargetSpv_1_3;
             break;
         default: // Vulkan 1.0/unknown
             vulkanClientVersion = glslang::EShTargetVulkan_1_0;
-            targetSpvVersion    = glslang::EShTargetSpv_1_3;
+            targetSpvVersion    = glslang::EShTargetSpv_1_2;
             break;
     }
 
@@ -828,6 +828,9 @@ spirvbytes OptimizeSPIRV(const spirvbytes& bin, const Options &options){
 			break;
 		case 15:
 			target = SPV_ENV_UNIVERSAL_1_5;
+			break;
+		case 16:
+			target = SPV_ENV_UNIVERSAL_1_6;
 			break;
 		default:
 			throw runtime_error("Unknown Vulkan version");
