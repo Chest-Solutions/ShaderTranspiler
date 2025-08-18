@@ -5,19 +5,23 @@ PROJECT(ShaderTranspiler)
 
 # --- [STEP 1] ADD THIS NEW HELPER FUNCTION AT THE TOP ---
 # This function finds Python and runs a dependency sync script for a given submodule.
+# --- This is the new, modernized helper function ---
 function(SyncSubmoduleDependencies SUBMODULE_PATH SCRIPT_NAME)
-    find_package(PythonInterp QUIET)
-    if(PYTHON_EXECUTABLE)
+    # Use the modern FindPython module. We look for a component named "Interpreter".
+    find_package(Python COMPONENTS Interpreter QUIET)
+    
+    # The new module provides a variable named "Python_EXECUTABLE"
+    if(Python_EXECUTABLE)
         set(SCRIPT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${SUBMODULE_PATH}/${SCRIPT_NAME}")
         if(EXISTS ${SCRIPT_PATH})
             message(STATUS "Found Python. Running dependency sync script for ${SUBMODULE_PATH}...")
             execute_process(
-                COMMAND ${PYTHON_EXECUTABLE} ${SCRIPT_NAME}
+                COMMAND ${Python_EXECUTABLE} ${SCRIPT_NAME} # Use the new variable name
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${SUBMODULE_PATH}
                 RESULT_VARIABLE SCRIPT_RESULT
             )
             if(NOT SCRIPT_RESULT EQUAL 0)
-                message(FATAL_ERROR "Dependency sync script failed for ${SUBMODULE_PATH}. Please check your Python and Git setup.")
+                message(FATAL_ERROR "Dependency sync script failed for ${SUBMODULE_PATH}.")
             endif()
         endif()
     else()
