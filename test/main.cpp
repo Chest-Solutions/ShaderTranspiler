@@ -20,7 +20,7 @@ int main(){
 			void main(){
 				color = vec4(1,0,0,1);
 			}
-		)",ShaderStage::Fragment};
+		)", "test.frag", ShaderStage::Fragment};
 	
 	//configure the compile with an Options object
 	Options opt;

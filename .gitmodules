@@ -1,25 +1,19 @@
 [submodule "deps/DirectXShaderCompiler"]
-        path = deps/DirectXShaderCompiler
-        url = https://github.com/microsoft/DirectXShaderCompiler
-        branch = main
-        submodule.recurse = true
+	path = deps/DirectXShaderCompiler
+	url = https://github.com/microsoft/DirectXShaderCompiler
+	branch = main
 [submodule "deps/glslang"]
-        path = deps/glslang
-        url = https://github.com/KhronosGroup/glslang.git
-        submodule.recurse = true
+	path = deps/glslang
+	url = https://github.com/KhronosGroup/glslang.git
 [submodule "deps/tint"]
-        path = deps/tint
-        url = https://dawn.googlesource.com/tint
-        submodule.recurse = true
+	path = deps/tint
+	url = https://dawn.googlesource.com/tint
 [submodule "deps/SPIRV-Cross"]
-        path = deps/SPIRV-Cross
-        url = https://github.com/KhronosGroup/SPIRV-Cross.git
-        submodule.recurse = true
+	path = deps/SPIRV-Cross
+	url = https://github.com/KhronosGroup/SPIRV-Cross.git
 [submodule "deps/SPIRV-Reflect"]
-        path = deps/SPIRV-Reflect
-        url = https://github.com/KhronosGroup/SPIRV-Reflect.git
-        submodule.recurse = true
+	path = deps/SPIRV-Reflect
+	url = https://github.com/KhronosGroup/SPIRV-Reflect.git
 [submodule "deps/SPIRV-Tools"]
-        path = deps/SPIRV-Tools
-        url = https://github.com/KhronosGroup/SPIRV-Tools.git
-        submodule.recurse = true
+	path = deps/SPIRV-Tools
+	url = https://github.com/KhronosGroup/SPIRV-Tools.git

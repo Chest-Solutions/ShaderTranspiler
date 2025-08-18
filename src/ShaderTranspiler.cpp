@@ -406,7 +406,7 @@ const CompileGLSLResult CompileGLSL(const std::string_view& source, const std::s
  @param filename the file to compile
  @param ShaderType the type of shader to compile
  */
-const CompileGLSLResult CompileGLSLFromFile(const FileCompileTask& task, const EShLanguage ShaderType, bool debug, bool enableInclude, bool noPushConstants, std::string preamble = ""){
+const CompileGLSLResult CompileGLSLFromFile(const FileCompileTask& task, const EShLanguage ShaderType, const Options& opt, bool enableInclude, bool noPushConstants, std::string preamble = ""){
 	
 	
 	//Load GLSL into a string
@@ -423,7 +423,8 @@ const CompileGLSLResult CompileGLSLFromFile(const FileCompileTask& task, const E
 	// add current directory
 	std::vector<std::filesystem::path> pathsWithParent(std::move(task.includePaths));
 	pathsWithParent.push_back(task.filename.parent_path());
-	return CompileGLSL(InputGLSL, task.filename.string(), ShaderType, pathsWithParent, debug, enableInclude, preamble, noPushConstants);
+    // Pass 'opt' in the correct argument position
+	return CompileGLSL(InputGLSL, task.filename.string(), ShaderType, opt, pathsWithParent, enableInclude, preamble, noPushConstants);
 }
 
 /**
@@ -947,7 +948,7 @@ CompileResult ShaderTranspiler::CompileTo(const FileCompileTask& task, TargetAPI
 
 	//generate spirv
 	bool noPushConstants = api == TargetAPI::WGSL;
-	auto spirv = CompileGLSLFromFile(task, types.type, opt.debug, opt.enableInclude, noPushConstants, opt.preambleContent);
+	auto spirv = CompileGLSLFromFile(task, types.type, opt, opt.enableInclude, noPushConstants, opt.preambleContent);
 	auto compres = CompileSpirVTo(spirv.spirvdata, api, opt, types);
 	compres.data.uniformData = std::move(spirv.uniforms);
 	compres.data.attributeData = std::move(spirv.attributes);
@@ -957,7 +958,7 @@ CompileResult ShaderTranspiler::CompileTo(const FileCompileTask& task, TargetAPI
 CompileResult ShaderTranspiler::CompileTo(const MemoryCompileTask& task, TargetAPI api, const Options& opt) {
 	bool noPushConstants = api == TargetAPI::WGSL;
 	auto types = ShaderStageToInternal(task.stage);
-	auto spirv = CompileGLSL(task.source, task.sourceFileName, types.type, task.includePaths, opt.debug, opt.enableInclude, opt.preambleContent, noPushConstants);
+	auto spirv = CompileGLSL(task.source, task.sourceFileName, types.type, opt, task.includePaths, opt.enableInclude, opt.preambleContent, noPushConstants);
 	auto compres = CompileSpirVTo(spirv.spirvdata, api, opt, types);
 	compres.data.uniformData = std::move(spirv.uniforms);
 	compres.data.attributeData = std::move(spirv.attributes);

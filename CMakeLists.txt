@@ -2,6 +2,30 @@ cmake_minimum_required(VERSION 3.17)
 set(CMAKE_XCODE_GENERATE_SCHEME OFF CACHE INTERNAL "")
 
 PROJECT(ShaderTranspiler)
+
+# --- [STEP 1] ADD THIS NEW HELPER FUNCTION AT THE TOP ---
+# This function finds Python and runs a dependency sync script for a given submodule.
+function(SyncSubmoduleDependencies SUBMODULE_PATH SCRIPT_NAME)
+    find_package(PythonInterp QUIET)
+    if(PYTHON_EXECUTABLE)
+        set(SCRIPT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${SUBMODULE_PATH}/${SCRIPT_NAME}")
+        if(EXISTS ${SCRIPT_PATH})
+            message(STATUS "Found Python. Running dependency sync script for ${SUBMODULE_PATH}...")
+            execute_process(
+                COMMAND ${PYTHON_EXECUTABLE} ${SCRIPT_NAME}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${SUBMODULE_PATH}
+                RESULT_VARIABLE SCRIPT_RESULT
+            )
+            if(NOT SCRIPT_RESULT EQUAL 0)
+                message(FATAL_ERROR "Dependency sync script failed for ${SUBMODULE_PATH}. Please check your Python and Git setup.")
+            endif()
+        endif()
+    else()
+        message(WARNING "Python interpreter not found. Skipping dependency sync for ${SUBMODULE_PATH}. This may cause build errors.")
+    endif()
+endfunction()
+# -------------------------------------------------------------
+
 option(ST_ENABLE_TEST "Enable tests" ON)
 option(ST_BUNDLED_DXC "Use the bundled DirectXShaderCompiler (required for cross-platform DXIL)" OFF)
 option(ST_ENABLE_WGSL "Enable WGSL output" OFF)
@@ -13,6 +37,8 @@ set(SKIP_SPIRV_TOOLS_INSTALL ON CACHE INTERNAL "")
 set(SPIRV_SKIP_EXECUTABLES ON CACHE INTERNAL "")
 set(SPIRV_SKIP_TESTS ON CACHE INTERNAL "")
 set(SPIRV_WERROR OFF CACHE INTERNAL "")
+# --- [STEP 2] CALL THE HELPER FUNCTION FOR SPIRV-Tools ---
+SyncSubmoduleDependencies("deps/SPIRV-Tools" "utils/git-sync-deps")
 add_subdirectory(deps/SPIRV-Tools EXCLUDE_FROM_ALL)
 
 set(SKIP_GLSLANG_INSTALL ON CACHE INTERNAL "")
@@ -21,6 +47,9 @@ set(ENABLE_GLSLANG_BINARIES OFF CACHE INTERNAL "")
 set(ENABLE_CTEST OFF CACHE INTERNAL "")
 set(BUILD_EXTERNAL OFF CACHE INTERNAL "")
 set(ENABLE_HLSL OFF CACHE INTERNAL "")
+# --- [STEP 3] CALL THE HELPER FUNCTION FOR glslang ---
+# glslang also uses a Python script, but it's named differently.
+SyncSubmoduleDependencies("deps/glslang" "update_glslang_sources.py")
 add_subdirectory(deps/glslang EXCLUDE_FROM_ALL)
 
 set(SPIRV_CROSS_CLI OFF CACHE INTERNAL "")
@@ -33,6 +62,8 @@ set(SPIRV_REFLECT_EXECUTABLE OFF)
 set(SPIRV_REFLECT_STATIC_LIB ON)
 add_subdirectory(deps/SPIRV-Reflect EXCLUDE_FROM_ALL)
 
+# ... (The rest of your CMakeLists.txt file remains EXACTLY the same) ...
+# ... (I am omitting it for brevity, but do not delete it from your file) ...
 if (ST_ENABLE_WGSL)
     set(TINT_BUILD_WGSL_READER OFF CACHE INTERNAL "")
     set(TINT_BUILD_GLSL_WRITER OFF CACHE INTERNAL "")
