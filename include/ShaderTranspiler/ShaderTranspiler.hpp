@@ -112,6 +112,7 @@ struct Options{
 	bool mobile;
 	bool debug = false;
 	bool enableInclude = true;
+	uint32_t spirvVersion = 0; // Default to 'auto'
 	std::string entryPoint = "frag";
 	struct UniformBufferSettings{
 		std::string newBufferName;
