@@ -238,7 +238,7 @@ TBuiltInResource CreateDefaultTBuiltInResource(){
 	};
 }
 
-struct CompileGLSLResult {
+struct Result {
 	spirvbytes spirvdata;
 	std::vector<Uniform> uniforms;
 	std::vector<LiveAttribute> attributes;
@@ -297,32 +297,35 @@ const CompileGLSLResult CompileGLSL(const std::string_view& source, const std::s
 
 	//=========== vulkan versioning (Now respects the Options struct) ========
     
+
     glslang::EShTargetClientVersion vulkanClientVersion;
     glslang::EShTargetLanguageVersion targetSpvVersion;
 
-    // Use a switch statement to select the correct versions based on options
+    // --- YOUR NEW, UPGRADED LOGIC ---
+    // First, determine the target Vulkan environment from 'options.version'
     switch (opt.version)
     {
-        case 14: // Vulkan 1.4
-            vulkanClientVersion = glslang::EShTargetVulkan_1_4; // (Requires updating glslang submodule)
-            targetSpvVersion    = glslang::EShTargetSpv_1_6;
-            break;
-        case 13: // Vulkan 1.3
-            vulkanClientVersion = glslang::EShTargetVulkan_1_3;
-            targetSpvVersion    = glslang::EShTargetSpv_1_6;
-            break;
-        case 12: // Vulkan 1.2
-            vulkanClientVersion = glslang::EShTargetVulkan_1_2;
-            targetSpvVersion    = glslang::EShTargetSpv_1_5;
-            break;
-        case 11: // Vulkan 1.1
-			vulkanClientVersion = glslang::EShTargetVulkan_1_1;
-            targetSpvVersion    = glslang::EShTargetSpv_1_3;
-            break;
-        default: // Vulkan 1.0/unknown
-            vulkanClientVersion = glslang::EShTargetVulkan_1_0;
-            targetSpvVersion    = glslang::EShTargetSpv_1_2;
-            break;
+        case 13: vulkanClientVersion = glslang::EShTargetVulkan_1_3; break;
+        case 12: vulkanClientVersion = glslang::EShTargetVulkan_1_2; break;
+        case 11:
+        default: vulkanClientVersion = glslang::EShTargetVulkan_1_1; break;
+        case 10: vulkanClientVersion = glslang::EShTargetVulkan_1_0; break;
+    }
+
+    // Second, determine the target SPIR-V version.
+    // If the user provided an explicit version, use it. Otherwise, use a safe default.
+    uint32_t finalSpirvVersion = (opt.spirvVersion > 0) ? opt.spirvVersion : opt.version;
+
+    switch (finalSpirvVersion)
+    {
+        case 16: targetSpvVersion = glslang::EShTargetSpv_1_6; break;
+        case 15: targetSpvVersion = glslang::EShTargetSpv_1_5; break;
+        case 14: targetSpvVersion = glslang::EShTargetSpv_1_4; break;
+        case 13: targetSpvVersion = glslang::EShTargetSpv_1_3; break;
+        case 12: targetSpvVersion = glslang::EShTargetSpv_1_2; break;
+        case 11: targetSpvVersion = glslang::EShTargetSpv_1_1; break;
+        case 10:
+        default: targetSpvVersion = glslang::EShTargetSpv_1_0; break;
     }
 
     // Set a compatible base GLSL version for input
