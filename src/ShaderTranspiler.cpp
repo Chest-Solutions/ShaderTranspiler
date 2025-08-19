@@ -49,9 +49,6 @@ static std::atomic<bool> glslAngInitialized = false;
 static std::atomic<bool> tintInit = false;
 static std::mutex tintInitMtx;
 
-const CompileGLSLResult CompileGLSL(const std::string_view& source, const std::string_view& sourceFileName, const EShLanguage ShaderType, const Options& opt, const std::vector<std::filesystem::path>& includePaths, bool enableInclude, std::string preamble, bool performWebGPUModifications);
-const CompileGLSLResult CompileGLSLFromFile(const FileCompileTask& task, const EShLanguage ShaderType, const Options& opt, bool enableInclude, bool noPushConstants, std::string preamble);
-
 ReflectData::Resource::Resource(const spirv_cross::Resource& other) : id(other.id), type_id(other.type_id), base_type_id(other.base_type_id), name(std::move(other.name)){}
 
 static ReflectData getReflectData(const spirv_cross::Compiler& comp, const spirvbytes& spirvdata){
@@ -412,8 +409,7 @@ const CompileGLSLResult CompileGLSL(const std::string_view& source, const std::s
  @param filename the file to compile
  @param ShaderType the type of shader to compile
  */
-const CompileGLSLResult CompileGLSLFromFile(const FileCompileTask& task, const EShLanguage ShaderType, const Options& opt, bool enableInclude, bool noPushConstants, std::string preamble = ""){
-	
+const CompileGLSLResult CompileGLSLFromFile(const FileCompileTask& task, const EShLanguage ShaderType, const Options& opt, bool enableInclude, bool noPushConstants, std::string preamble) {
 	
 	//Load GLSL into a string
 	std::ifstream file(task.filename);
@@ -429,7 +425,8 @@ const CompileGLSLResult CompileGLSLFromFile(const FileCompileTask& task, const E
 	// add current directory
 	std::vector<std::filesystem::path> pathsWithParent(std::move(task.includePaths));
 	pathsWithParent.push_back(task.filename.parent_path());
-    // Pass 'opt' in the correct argument position
+
+    // Pass 'opt' in the correct argument position to the main CompileGLSL function
 	return CompileGLSL(InputGLSL, task.filename.string(), ShaderType, opt, pathsWithParent, enableInclude, preamble, noPushConstants);
 }
 
