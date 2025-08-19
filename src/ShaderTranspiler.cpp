@@ -49,6 +49,9 @@ static std::atomic<bool> glslAngInitialized = false;
 static std::atomic<bool> tintInit = false;
 static std::mutex tintInitMtx;
 
+const CompileGLSLResult CompileGLSL(const std::string_view& source, const std::string_view& sourceFileName, const EShLanguage ShaderType, const Options& opt, const std::vector<std::filesystem::path>& includePaths, bool enableInclude, std::string preamble, bool performWebGPUModifications);
+const CompileGLSLResult CompileGLSLFromFile(const FileCompileTask& task, const EShLanguage ShaderType, const Options& opt, bool enableInclude, bool noPushConstants, std::string preamble);
+
 ReflectData::Resource::Resource(const spirv_cross::Resource& other) : id(other.id), type_id(other.type_id), base_type_id(other.base_type_id), name(std::move(other.name)){}
 
 static ReflectData getReflectData(const spirv_cross::Compiler& comp, const spirvbytes& spirvdata){
