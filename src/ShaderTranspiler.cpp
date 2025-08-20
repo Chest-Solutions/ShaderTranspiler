@@ -184,7 +184,7 @@ const CompileGLSLResult CompileGLSL(const std::string_view& source, const std::s
         default: vulkanClientVersion = glslang::EShTargetVulkan_1_0; break;
     }
 	
-	if (!options.spirvVersion) {
+	if (!opt.spirvVersion) {
 		switch (opt.version) {
 			case 14: targetSpvVersion = glslang::EShTargetSpv_1_6; break;
         	case 13: targetSpvVersion = glslang::EShTargetSpv_1_6; break;
