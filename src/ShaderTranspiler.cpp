@@ -498,23 +498,24 @@ spirvbytes OptimizeSPIRV(const spirvbytes& bin, const Options &options){
 	spv_target_env target;
 	if (!options.spirvVersion) {
 		switch (opt.version) {
-			case 14: target = glslang::EShTargetSpv_1_6; break;
-        	case 13: target = glslang::EShTargetSpv_1_6; break;
-        	case 12: target = glslang::EShTargetSpv_1_5; break;
-        	case 11: target = glslang::EShTargetSpv_1_3; break;
-        	default: target = glslang::EShTargetSpv_1_0; break;
+			case 14: target = SPV_ENV_UNIVERSAL_1_6; break;
+        	case 13: target = SPV_ENV_UNIVERSAL_1_6; break;
+        	case 12: target = SPV_ENV_UNIVERSAL_1_5; break;
+        	case 11: target = SPV_ENV_UNIVERSAL_1_3; break;
+        	default: target = SPV_ENV_UNIVERSAL_1_0; break;
     	}
 	} else {
 		switch (opt.spirvVersion) {
-			case 16: target = glslang::EShTargetSpv_1_6; break;
-        	case 15: target = glslang::EShTargetSpv_1_5; break;
-        	case 14: target = glslang::EShTargetSpv_1_4; break;
-			case 13: target = glslang::EShTargetSpv_1_3; break;
-			case 12: target = glslang::EShTargetSpv_1_2; break;
-			case 11: target = glslang::EShTargetSpv_1_1; break;
-        	default: target = glslang::EShTargetSpv_1_0; break;
+			case 16: target = SPV_ENV_UNIVERSAL_1_6; break;
+        	case 15: target = SPV_ENV_UNIVERSAL_1_5; break;
+        	case 14: target = SPV_ENV_UNIVERSAL_1_4; break;
+			case 13: target = SPV_ENV_UNIVERSAL_1_3; break;
+			case 12: target = SPV_ENV_UNIVERSAL_1_2; break;
+			case 11: target = SPV_ENV_UNIVERSAL_1_1; break;
+        	default: target = SPV_ENV_UNIVERSAL_1_0; break;
     	}
 	}
+	
 	spvtools::MessageConsumer consumer = [&](spv_message_level_t level, const char* source, const spv_position_t& position, const char* message){
 		switch(level){
 			case SPV_MSG_FATAL: case SPV_MSG_INTERNAL_ERROR: case SPV_MSG_ERROR: throw runtime_error(message); break;
