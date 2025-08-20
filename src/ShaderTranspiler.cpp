@@ -497,7 +497,7 @@ CompileResult SerializeSPIRV(const spirvbytes& bin){
 spirvbytes OptimizeSPIRV(const spirvbytes& bin, const Options &options){
 	spv_target_env target;
 	if (!options.spirvVersion) {
-		switch (opt.version) {
+		switch (options.version) {
 			case 14: target = SPV_ENV_UNIVERSAL_1_6; break;
         	case 13: target = SPV_ENV_UNIVERSAL_1_6; break;
         	case 12: target = SPV_ENV_UNIVERSAL_1_5; break;
@@ -505,7 +505,7 @@ spirvbytes OptimizeSPIRV(const spirvbytes& bin, const Options &options){
         	default: target = SPV_ENV_UNIVERSAL_1_0; break;
     	}
 	} else {
-		switch (opt.spirvVersion) {
+		switch (options.spirvVersion) {
 			case 16: target = SPV_ENV_UNIVERSAL_1_6; break;
         	case 15: target = SPV_ENV_UNIVERSAL_1_5; break;
         	case 14: target = SPV_ENV_UNIVERSAL_1_4; break;
