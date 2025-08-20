@@ -177,30 +177,30 @@ const CompileGLSLResult CompileGLSL(const std::string_view& source, const std::s
     glslang::EShTargetClientVersion vulkanClientVersion;
     glslang::EShTargetLanguageVersion targetSpvVersion;
     switch (opt.version) {
-		case 14: vulkanClientVersion = glslang::EShTargetVulkan_1_4 break;
-        case 13: vulkanClientVersion = glslang::EShTargetVulkan_1_3 break;
-        case 12: vulkanClientVersion = glslang::EShTargetVulkan_1_2 break;
-        case 11: vulkanClientVersion = glslang::EShTargetVulkan_1_1 break;
-        default: vulkanClientVersion = glslang::EShTargetVulkan_1_0 break;
+		case 14: vulkanClientVersion = glslang::EShTargetVulkan_1_4; break;
+        case 13: vulkanClientVersion = glslang::EShTargetVulkan_1_3; break;
+        case 12: vulkanClientVersion = glslang::EShTargetVulkan_1_2; break;
+        case 11: vulkanClientVersion = glslang::EShTargetVulkan_1_1; break;
+        default: vulkanClientVersion = glslang::EShTargetVulkan_1_0; break;
     }
 	
 	if (!options.spirvVersion) {
 		switch (opt.version) {
-			case 14: targetSpvVersion = glslang::EShTargetSpv_1_6 break;
-        	case 13: targetSpvVersion = glslang::EShTargetSpv_1_6 break;
-        	case 12: targetSpvVersion = glslang::EShTargetSpv_1_5 break;
-        	case 11: targetSpvVersion = glslang::EShTargetSpv_1_3 break;
-        	default: targetSpvVersion = glslang::EShTargetSpv_1_0 break;
+			case 14: targetSpvVersion = glslang::EShTargetSpv_1_6; break;
+        	case 13: targetSpvVersion = glslang::EShTargetSpv_1_6; break;
+        	case 12: targetSpvVersion = glslang::EShTargetSpv_1_5; break;
+        	case 11: targetSpvVersion = glslang::EShTargetSpv_1_3; break;
+        	default: targetSpvVersion = glslang::EShTargetSpv_1_0; break;
     	}
 	} else {
 		switch (opt.spirvVersion) {
-			case 16: targetSpvVersion = glslang::EShTargetSpv_1_6 break;
-        	case 15: targetSpvVersion = glslang::EShTargetSpv_1_5 break;
-        	case 14: targetSpvVersion = glslang::EShTargetSpv_1_4 break;
-			case 13: targetSpvVersion = glslang::EShTargetSpv_1_3 break;
-			case 12: targetSpvVersion = glslang::EShTargetSpv_1_2 break;
-			case 11: targetSpvVersion = glslang::EShTargetSpv_1_1 break;
-        	default: targetSpvVersion = glslang::EShTargetSpv_1_0 break;
+			case 16: targetSpvVersion = glslang::EShTargetSpv_1_6; break;
+        	case 15: targetSpvVersion = glslang::EShTargetSpv_1_5; break;
+        	case 14: targetSpvVersion = glslang::EShTargetSpv_1_4; break;
+			case 13: targetSpvVersion = glslang::EShTargetSpv_1_3; break;
+			case 12: targetSpvVersion = glslang::EShTargetSpv_1_2; break;
+			case 11: targetSpvVersion = glslang::EShTargetSpv_1_1; break;
+        	default: targetSpvVersion = glslang::EShTargetSpv_1_0; break;
     	}
 	}
     constexpr int clientInputSemanticsVersion = 100;
