@@ -176,14 +176,33 @@ const CompileGLSLResult CompileGLSL(const std::string_view& source, const std::s
 
     glslang::EShTargetClientVersion vulkanClientVersion;
     glslang::EShTargetLanguageVersion targetSpvVersion;
-    switch (opt.version)
-    {
-        case 13: vulkanClientVersion = glslang::EShTargetVulkan_1_3; targetSpvVersion = glslang::EShTargetSpv_1_6; break;
-        case 12: vulkanClientVersion = glslang::EShTargetVulkan_1_2; targetSpvVersion = glslang::EShTargetSpv_1_5; break;
-        case 11: vulkanClientVersion = glslang::EShTargetVulkan_1_1; targetSpvVersion = glslang::EShTargetSpv_1_3; break;
-        case 10: 
-        default: vulkanClientVersion = glslang::EShTargetVulkan_1_0; targetSpvVersion = glslang::EShTargetSpv_1_0; break;
+    switch (opt.version) {
+		case 14: vulkanClientVersion = glslang::EShTargetVulkan_1_4 break;
+        case 13: vulkanClientVersion = glslang::EShTargetVulkan_1_3 break;
+        case 12: vulkanClientVersion = glslang::EShTargetVulkan_1_2 break;
+        case 11: vulkanClientVersion = glslang::EShTargetVulkan_1_1 break;
+        default: vulkanClientVersion = glslang::EShTargetVulkan_1_0 break;
     }
+	
+	if (!options.spirvVersion) {
+		switch (opt.version) {
+			case 14: target = glslang::EShTargetSpv_1_6 break;
+        	case 13: target = glslang::EShTargetSpv_1_6 break;
+        	case 12: target = glslang::EShTargetSpv_1_5 break;
+        	case 11: target = glslang::EShTargetSpv_1_3 break;
+        	default: target = glslang::EShTargetSpv_1_0 break;
+    	}
+	} else {
+		switch (opt.spirvVersion) {
+			case 16: target = glslang::EShTargetSpv_1_6 break;
+        	case 15: target = glslang::EShTargetSpv_1_5 break;
+        	case 14: target = glslang::EShTargetSpv_1_4 break;
+			case 13: target = glslang::EShTargetSpv_1_3 break;
+			case 12: target = glslang::EShTargetSpv_1_2 break;
+			case 11: target = glslang::EShTargetSpv_1_1 break;
+        	default: target = glslang::EShTargetSpv_1_0 break;
+    	}
+	}
     constexpr int clientInputSemanticsVersion = 100;
 	shader.setEnvInput(glslang::EShSourceGlsl, ShaderType, glslang::EShClientVulkan, clientInputSemanticsVersion);
 	shader.setEnvClient(glslang::EShClientVulkan, vulkanClientVersion);
@@ -477,15 +496,24 @@ CompileResult SerializeSPIRV(const spirvbytes& bin){
 }
 spirvbytes OptimizeSPIRV(const spirvbytes& bin, const Options &options){
 	spv_target_env target;
-	switch(options.version){
-		case 10: target = SPV_ENV_UNIVERSAL_1_0; break;
-		case 11: target = SPV_ENV_UNIVERSAL_1_1; break;
-		case 12: target = SPV_ENV_UNIVERSAL_1_2; break;
-		case 13: target = SPV_ENV_UNIVERSAL_1_3; break;
-		case 14: target = SPV_ENV_UNIVERSAL_1_4; break;
-		case 15: target = SPV_ENV_UNIVERSAL_1_5; break;
-		case 16: target = SPV_ENV_UNIVERSAL_1_6; break;
-		default: throw runtime_error("Unknown Vulkan version"); break;
+	if (!options.spirvVersion) {
+		switch (opt.version) {
+			case 14: target = glslang::EShTargetSpv_1_6; break;
+        	case 13: target = glslang::EShTargetSpv_1_6; break;
+        	case 12: target = glslang::EShTargetSpv_1_5; break;
+        	case 11: target = glslang::EShTargetSpv_1_3; break;
+        	default: target = glslang::EShTargetSpv_1_0; break;
+    	}
+	} else {
+		switch (opt.spirvVersion) {
+			case 16: target = glslang::EShTargetSpv_1_6; break;
+        	case 15: target = glslang::EShTargetSpv_1_5; break;
+        	case 14: target = glslang::EShTargetSpv_1_4; break;
+			case 13: target = glslang::EShTargetSpv_1_3; break;
+			case 12: target = glslang::EShTargetSpv_1_2; break;
+			case 11: target = glslang::EShTargetSpv_1_1; break;
+        	default: target = glslang::EShTargetSpv_1_0; break;
+    	}
 	}
 	spvtools::MessageConsumer consumer = [&](spv_message_level_t level, const char* source, const spv_position_t& position, const char* message){
 		switch(level){
